@@ -28,6 +28,8 @@ The framework is evaluated on [OVO-Bench](https://github.com/JoeLeelyf/OVO-Bench
 
 ## Core Architecture
 
+![System Architecture](./figures/002.PNG)
+
 ### Step 1 — Whole-Video CLIP Encoding + Temporal Decay Clustering
 
 The video is encoded once per clip using CLIP ViT-B/32 at 1 frame/second. A cold-start S2 probe (frames 0–20s and 60–100s) estimates the video's semantic dynamics (μ, σ), which initializes the V4 Temporal Decay Clustering (TDC) algorithm to detect scene-transition keyframes (keyframe anchors) across the full video.
@@ -56,6 +58,8 @@ Two temporal anchors are established: `T_event` (the moment described) and `real
 | A — Keyframe Window | `[A-Window*]` | T_event | Sigmoid inverse-CDF per V4 segment | 224×126 (kf_anchor: 640×360) |
 | C — Semantic Window | `[T_event]` | T_event | Fibonacci sparse, bilateral | full resolution |
 | B — Realtime Window | `[PRE-REALTIME]` | realtime | Fibonacci sparse, unilateral | full resolution |
+
+![Four-Source Sampling](./figures/001.PNG)
 
 Each source contributes frames independently. Sources are merged, deduplicated by CLIP cosine similarity (threshold > 0.95), and labeled before being passed to the LLM.
 
@@ -194,6 +198,8 @@ This smoothed score becomes the regression target for the Random Forest, providi
 
 Elapsed / Realtime < 1.0 means the system processes faster than the clip's real-time duration. ASI > 1.0 due to shorter average clip length (150s) inflating the ratio.
 
+![Results Analysis](./figures/003.PNG)
+
 ### Improvement by Question Type
 
 | q_type | Baseline | Final | Δ |
@@ -212,6 +218,8 @@ Elapsed / Realtime < 1.0 means the system processes faster than the clip's real-
 | D — Big Window | 0.147 |
 
 ---
+
+![Development Pipeline](./figures/004.PNG)
 
 ## Installation & Usage
 
